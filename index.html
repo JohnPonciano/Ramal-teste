@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="ramais" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramais</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <style>
+        .jumbotron{
+            width: 400px;
+            align-items: center;
+            text-align: center;
+            margin: auto;
+        }
+        .form-control{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .selected{
+            background-color: #FFD166;
+        }
+        .negrito{
+            font-size: small;
+        }
+    </style>
+
+
+</head>
+
+<body ng-controller='ramaisControllers'>
+        <div class="jumbotron">
+            <h3 >{{app}}</h3>
+            
+            <table class="table">
+                <tr>
+                    <th>Nome</th>
+                    <th>Numero</th>
+                    <th>Operadoras</th>
+                    <th></th>
+                </tr>
+                <tr ng-class="{'selected negrito': contato.selected}" ng-repeat="contato in contatos ">
+                    <td><input type="checkbox" ng-model="contato.selected"/></td>
+                    <td>{{contato.nome}}</td>
+                    <td>{{contato.telefone}}</td>
+                    <td>{{contato.operadoras.nome}}</td>
+                    <td>
+                        <div style="width: 20px; height: 20px;" ng-style="{'background-color':contato.color}"></div>
+                    </td>
+                </tr>
+            </table>
+            <hr/>
+
+            <input class="form-control" type="text" ng-model="contato.nome"/>
+            <input class="form-control" type="text" ng-model="contato.telefone"/>
+            {{contato}}
+            <select class="form-control" ng-model="contato.operadoras" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras">
+                <option value="">Seleciona uma Operadora</option>
+            </select>
+
+            <button type="button" class="btn btn-success btn-block" ng-click="addContato(contato)" ng-disabled="!contato.nome || !contato.telefone">
+                Adicionar
+            </button>
+
+            <button type="button" class="btn btn-danger btn-block" ng-click="deleteContato(contatos)" ng-disabled="!isContatoSelected(contatos)">
+                Apagar
+            </button>
+        </div>
+</body>
+
+<script>
+    angular.module("ramais", []);
+    angular.module("ramais").controller('ramaisControllers', function($scope){
+
+        $scope.app = "Ramais"
+        $scope.contatos = [
+        {nome:"Pedro" , telefone:"1140028922" , color:"#06D6A0"},
+        {nome:"Anna" , telefone:"11999858514", color:"#118AB2"},
+        {nome:"Yudi" , telefone:"1155748235",color:"#073B4C"}
+
+        ];
+        $scope.operadoras = [   
+                {nome: 'OI',codigo: 14 ,categoria: 'Celular' },
+                {nome: 'Tim',codigo: 15 , categoria: 'VoIP'},
+                {nome: 'Vivo',codigo: 16 , categoria:'Celular'},
+                {nome: 'Claro',codigo: 11 , categoria:'Internacional'},
+                {nome: 'TIM-BETA',codigo: 16 , categoria:'Internacional'},
+        ];
+
+        $scope.addContato = function(contato){
+        $scope.contatos.push(contato);
+        delete $scope.contato
+    } 
+
+    $scope.deleteContato = function(contatos){
+        $scope.contatos = contatos.filter(function(contato){
+            if(!contato.selected) return contato
+        })
+    }
+        $scope.isContatoSelected = function(contatos){
+            return isContatoSelected = contatos.some(function (contato){
+                return contato.selected;
+            })
+        }
+
+    })
+    
+</script>
+
+
+
+
+</html>
